@@ -1,5 +1,6 @@
 const selectedCity = document.querySelector('#citySelector');
 const searchButton = document.querySelector('#searchButton');
+const loader = document.querySelector('#loader');
 const temperatureDisplay = document.querySelector('#temperatureDisplay');
 
 async function weatherRequest(cityName) {
@@ -23,6 +24,8 @@ searchButton.addEventListener('click', () => {
 
 async function showCurrentWeather(cityName) {
   try {
+    temperatureDisplay.innerHTML = '';
+    loader.style.display = 'block';
     const currentWeather = await weatherRequest(cityName);
     printTemperature(currentWeather);
   } catch (error) {
@@ -30,17 +33,19 @@ async function showCurrentWeather(cityName) {
   }
 }
 async function printTemperature(currentWeather) {
-  temperatureDisplay.innerHTML = '';
   let temperature = currentWeather.current.temp_c;
-  temperatureDisplay.append(
-    `The current temperature in ${currentWeather.location.name} is ${temperature} Degrees Celcius`
-  );
-
-  temperature > 20 ? (temperature = 'warm') : (temperature = 'cold');
+  let giffSearch = '';
+  temperature > 20 ? (giffSearch = 'warm') : (giffSearch = 'cold');
   let imgLoader = document.createElement('img');
-  let giffUrl = await getGiffUrl(temperature);
+  let giffUrl = await getGiffUrl(giffSearch);
   imgLoader.src = giffUrl;
-  temperatureDisplay.append(imgLoader);
+  imgLoader.addEventListener('load', function () {
+      loader.style.display = 'none';
+      temperatureDisplay.append(
+        `The Current temperature in ${currentWeather.location.name} is ${temperature} Degrees Celcius`
+      );
+      temperatureDisplay.append(imgLoader);
+  });
 }
 async function getGiffUrl(searchWord) {
   try {
