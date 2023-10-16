@@ -10,7 +10,7 @@ async function weatherRequest(cityName) {
         mode: 'cors',
       }
     );
-    currentWeather = await apiRequest.json();
+    const currentWeather = await apiRequest.json();
     return currentWeather;
   } catch (error) {
     console.log(error);
@@ -18,18 +18,18 @@ async function weatherRequest(cityName) {
 }
 
 searchButton.addEventListener('click', () => {
-  getTemperature(selectedCity.value);
+  showCurrentWeather(selectedCity.value);
 });
 
-async function getTemperature(cityName) {
+async function showCurrentWeather(cityName) {
   try {
     const currentWeather = await weatherRequest(cityName);
-    showCurrentTemperature(currentWeather);
+    printTemperature(currentWeather);
   } catch (error) {
     console.log(error);
   }
 }
-async function showCurrentTemperature(currentWeather) {
+async function printTemperature(currentWeather) {
   temperatureDisplay.innerHTML = '';
   let temperature = currentWeather.current.temp_c;
   temperatureDisplay.append(
@@ -38,11 +38,11 @@ async function showCurrentTemperature(currentWeather) {
 
   temperature > 20 ? (temperature = 'warm') : (temperature = 'cold');
   let imgLoader = document.createElement('img');
-  let giffUrl = await loadGiffAsync(temperature);
+  let giffUrl = await getGiffUrl(temperature);
   imgLoader.src = giffUrl;
   temperatureDisplay.append(imgLoader);
 }
-async function loadGiffAsync(searchWord) {
+async function getGiffUrl(searchWord) {
   try {
     const GiffResponse = await fetch(
       `https://api.giphy.com/v1/gifs/translate?api_key=YFXsGq81CZMy9iZvkrWUurW2bBxkFd0w&s=${searchWord}`,

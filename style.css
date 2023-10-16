@@ -1,0 +1,12 @@
+#temperatureDisplay {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+}
+ #temperatureDisplay * {
+    margin: 1rem;
+ }
+
+ #temperatureDisplay, #searchBar {
+    margin: 1rem;
+ }
